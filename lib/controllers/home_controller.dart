@@ -27,14 +27,14 @@ class HomeController extends GetxController {
   Future characters() async {
     try {
       var url = Uri.parse(
-          'http://gateway.marvel.com/v1/public/characters?limit=100&offset=$offset&ts=$ts&apikey=$apiKey&hash=$lastKey');
+          'http://gateway.marvel.com/v1/public/characters?limit=50&offset=$offset&ts=$ts&apikey=$apiKey&hash=$lastKey');
       var response = await http.get(url);
       var jsonData = json.decode(response.body);
       jsonData = jsonData['data']['results'];
       for (var item in jsonData) {
-        saveData.add(Character.fromJson(item));
+        data.add(Character.fromJson(item));
       }
-      data.value = saveData;
+      saveData = data;
     } on Exception catch (e) {
       print(e);
     }
@@ -46,9 +46,11 @@ class HomeController extends GetxController {
     } else {
       showToTheTop.value = false;
     }
-    if (scrollController.position.extentAfter <= 0) {
+    if (scrollController.position.extentAfter <= 0 && offset < 1561) {
       offset += 50;
-      await characters();
+      if (!pesquisando) {
+        await characters();
+      }
     }
   }
 
@@ -78,16 +80,29 @@ class HomeController extends GetxController {
   void pesquisar(value) {
     if (value.trim().isEmpty) {
       pesquisando = false;
-      data.value = saveData;
+      data.clear();
+      characters();
       return;
     }
     pesquisando = true;
-    final pesquisa = data
-        .where((item) =>
-            item.name.toLowerCase().contains(value.trim().toLowerCase()))
-        .toList();
+    offset = 0;
+    pesquisaPorNome(value);
+  }
 
-    data.value = pesquisa;
+  Future<void> pesquisaPorNome(value) async {
+    data.clear();
+    try {
+      var url = Uri.parse(
+          'http://gateway.marvel.com/v1/public/characters?nameStartsWith=$value&limit=100&ts=$ts&apikey=$apiKey&hash=$lastKey');
+      var response = await http.get(url);
+      var jsonData = json.decode(response.body);
+      jsonData = jsonData['data']['results'];
+      for (var item in jsonData) {
+        data.add(Character.fromJson(item));
+      }
+    } on Exception catch (e) {
+      print(e);
+    }
   }
 
   toTheTop() {
