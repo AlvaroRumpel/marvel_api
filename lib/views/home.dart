@@ -1,11 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 import 'package:marvel_api/controllers/home_controller.dart';
-import 'package:marvel_api/models/character_model.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({
@@ -27,6 +22,36 @@ class HomePage extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
+            TextField(
+              controller: ct.pesquisaController,
+              onChanged: (value) => ct.pesquisar(value),
+              style: const TextStyle(
+                color: Color(0xfffefefe),
+              ),
+              decoration: InputDecoration(
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  borderSide: const BorderSide(
+                    color: Color(0xffec1d24),
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  borderSide: const BorderSide(
+                    color: Color(0x5ffefefe),
+                  ),
+                ),
+                hintText: 'Pesquisar...',
+                hintStyle: TextStyle(
+                  color: Color(0x5ffefefe),
+                ),
+                filled: true,
+                fillColor: Color(0xff202020),
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
             Obx(
               () => ct.data.isNotEmpty
                   ? Expanded(
@@ -42,6 +67,9 @@ class HomePage extends StatelessWidget {
                             key: Key(ct.data[index].id.toString()),
                             elevation: 10.0,
                             shape: RoundedRectangleBorder(
+                                side: const BorderSide(
+                                  color: Color(0x5ffefefe),
+                                ),
                                 borderRadius: BorderRadius.circular(15)),
                             child: Padding(
                               padding: const EdgeInsets.all(16.0),

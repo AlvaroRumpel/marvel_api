@@ -7,6 +7,9 @@ import 'package:url_launcher/url_launcher.dart';
 
 class HomeController extends GetxController {
   var data = [].obs;
+  List saveData = [];
+  bool pesquisando = false;
+  TextEditingController pesquisaController = TextEditingController();
   ScrollController scrollController = ScrollController();
   int offset = 0;
   final ts = '1650928145941';
@@ -28,8 +31,9 @@ class HomeController extends GetxController {
       var jsonData = json.decode(response.body);
       jsonData = jsonData['data']['results'];
       for (var item in jsonData) {
-        data.add(Character.fromJson(item));
+        saveData.add(Character.fromJson(item));
       }
+      data.value = saveData;
     } on Exception catch (e) {
       print(e);
     }
@@ -63,5 +67,20 @@ class HomeController extends GetxController {
     } else {
       print("Failed to launch ${url.toString()}");
     }
+  }
+
+  void pesquisar(value) {
+    if (value.trim().isEmpty) {
+      pesquisando = false;
+      data.value = saveData;
+      return;
+    }
+    pesquisando = true;
+    final pesquisa = data
+        .where((item) =>
+            item.name.toLowerCase().contains(value.trim().toLowerCase()))
+        .toList();
+
+    data.value = pesquisa;
   }
 }

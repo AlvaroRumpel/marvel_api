@@ -9,9 +9,9 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  static const MaterialColor marvelRed = const MaterialColor(
+  static const MaterialColor marvelRed = MaterialColor(
     0xffec1d24,
-    const <int, Color>{
+    <int, Color>{
       50: Color.fromARGB(10, 236, 29, 36),
       100: Color.fromARGB(20, 236, 29, 36),
       200: Color.fromARGB(30, 236, 29, 36),
@@ -28,6 +28,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Marvel',
       theme: ThemeData(
         primarySwatch: marvelRed,
