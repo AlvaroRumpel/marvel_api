@@ -7,6 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 class HomeController extends GetxController {
   var data = [].obs;
+  RxBool showToTheTop = false.obs;
   List saveData = [];
   bool pesquisando = false;
   TextEditingController pesquisaController = TextEditingController();
@@ -40,6 +41,11 @@ class HomeController extends GetxController {
   }
 
   Future loadMore() async {
+    if (scrollController.offset >= 400) {
+      showToTheTop.value = true;
+    } else {
+      showToTheTop.value = false;
+    }
     if (scrollController.position.extentAfter <= 0) {
       offset += 50;
       await characters();
@@ -82,5 +88,10 @@ class HomeController extends GetxController {
         .toList();
 
     data.value = pesquisa;
+  }
+
+  toTheTop() {
+    scrollController.animateTo(0,
+        duration: const Duration(seconds: 2), curve: Curves.ease);
   }
 }

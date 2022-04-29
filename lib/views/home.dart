@@ -120,12 +120,26 @@ class HomePage extends StatelessWidget {
                         ),
                       ),
                     )
-                  : Center(
+                  : const Center(
                       child: CircularProgressIndicator(),
                     ),
             ),
           ],
         ),
+      ),
+      floatingActionButton: Obx(
+        () => !ct.showToTheTop.value
+            ? FloatingActionButton(
+                mini: true,
+                onPressed: () {},
+                backgroundColor: Color(0x00000000),
+                elevation: 0,
+              )
+            : FloatingActionButton(
+                onPressed: ct.toTheTop,
+                child: const Icon(Icons.arrow_upward),
+                backgroundColor: Color(0xffec1d24),
+              ),
       ),
     );
   }
